@@ -14,6 +14,9 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.get('/', (req, res) => {
+  res.send('Server is up!');
+});
 
 app.use("/api/", userRoutes);
 app.use("/api/", workerRoutes);

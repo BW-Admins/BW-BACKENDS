@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema({
   failedOtpAttempts: { type: Number, default: 0 },
   accountLocked: { type: Boolean, default: false },
   refreshToken: { type: String },
-  // Worker-related fields
   secondaryMobile: { type: String },
   profileImage: { type: String },
   gender: { type: String },

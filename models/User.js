@@ -4,8 +4,8 @@ const generateUserId = require("../utils/generateUserId");
 const userSchema = new mongoose.Schema({
   userId: { type: String, unique: true, default: generateUserId },
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  mobile: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true }, // Keep unique
+  mobile: { type: String, required: true }, // Remove unique: true
   password: { type: String, required: true },
   acceptNotifications: { type: Boolean, default: false },
   registeredDateTime: { type: Date, default: Date.now },

@@ -28,12 +28,15 @@ const sendOtpEmail = async (email, otp) => {
 // Register User
 const registerUser = async (req, res) => {
   const { name, email, mobile, password, acceptNotifications } = req.body;
+  console.log('Register attempt:', { name, email, mobile }); // Log incoming data
+  console.log('Mobile check status: NOT CHECKING'); // Debug line
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log('Email conflict:', existingUser);
       return res.status(400).json({ message: "Email already exists" });
     }
-
+    // No mobile check here
     const hashedPassword = await bcrypt.hash(password, 12);
     const otp = generateOtp();
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
@@ -52,6 +55,7 @@ const registerUser = async (req, res) => {
     });
 
     await user.save();
+    console.log('User saved:', { userId: user.userId, mobile });
     try {
       await sendOtpEmail(email, otp);
     } catch (emailError) {
@@ -62,13 +66,13 @@ const registerUser = async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
+      console.log('Duplicate key error:', { field, value: error.keyValue[field] });
       return res.status(400).json({ message: `${field} already exists` });
     }
     console.error("Registration Error:", error);
     res.status(500).json({ message: "Server error during registration" });
   }
 };
-
 // Delete User
 const deleteUser = async (req, res) => {
   const { email } = req.body;
